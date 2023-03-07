@@ -1,12 +1,12 @@
 version: '3'
 services:
-    anchorblock-accounting-mvp-backend:
+    nestjs-starter-kit:
         build:
             context: .
             dockerfile: ./Dockerfile
-        image: anchorblock-accounting-mvp-backend
+        image: nestjs-starter-kit
         ports:
             - '80:3000'
-        container_name: anchorblock-accounting-mvp-backend
+        container_name: nestjs-starter-kit
         volumes:
             - /app/node_modules
