@@ -5,10 +5,20 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import { SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe as VP } from 'src/common/pipes/validation.pipe'
 import { AppModule } from './app.module'
+import { swaggerConfig } from './config/swagger.config'
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
+
+    // SWAGGER CONFIGURATION
+    SwaggerModule.setup(
+        'docs',
+        app,
+        SwaggerModule.createDocument(app, swaggerConfig)
+    )
+
     const configService = app.get(ConfigService)
     app.setGlobalPrefix('api')
     app.useGlobalPipes(new VP())

@@ -1,21 +1,10 @@
 import { Exclude } from 'class-transformer'
 import { IsEmail, IsString } from 'class-validator'
+import { CustomBaseEntity } from 'src/common/entity/custom-base.entity'
 import { Role } from 'src/modules/role/entities/role.entity'
-import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 @Entity()
-export class User extends BaseEntity {
-    @PrimaryGeneratedColumn('increment')
-    id: number
-
+export class User extends CustomBaseEntity {
     @Column({ type: 'varchar', length: 30, nullable: true })
     name: string
 
@@ -36,20 +25,15 @@ export class User extends BaseEntity {
     @Column({ type: 'varchar', length: 30, nullable: true })
     avatarUrl: string
 
-    @Column({
-        type: 'int'
-    })
-    roleId: number
-
-    @ManyToOne(() => Role)
+    @ManyToOne
+    (() => Role, (role) => role.users)
     role: Role
 
-    @CreateDateColumn()
-    createdAt: Date
+    @Column({ type: 'bigint', nullable: true })
+    roleId: number
 
-    @UpdateDateColumn()
-    updatedAt: Date
-
-    @DeleteDateColumn()
-    deletedAt: Date
+    @OneToMany(() => Role, (role) => role.createdByUser, {
+        cascade: true
+    })
+    roles: Role[]
 }
