@@ -2,46 +2,176 @@ import { ApiProperty } from '@nestjs/swagger'
 import {
     IsEmail,
     IsNotEmpty,
-    IsNumber,
     IsString,
+    Length,
     MinLength
 } from 'class-validator'
 
-// Login DTO
-export class LoginRequestDto {
+import { IsEnum, IsOptional } from 'class-validator'
+import { ValidationMessage } from 'src/common/filters/validation.messages'
+import { UserTypes } from 'src/modules/users/data/user-type.enum'
+
+export class LoginDto {
+    @IsString({
+        message: ValidationMessage('email').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('email').isNotEmpty
+    })
     @IsEmail()
     @ApiProperty()
-    readonly email: string
+    email: string
 
-    @IsString()
+    @IsString({
+        message: ValidationMessage('password').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('password').isNotEmpty
+    })
     @ApiProperty()
-    readonly password: string
+    password: string
 }
 
-// Registration DTO
-export class RegisterRequestDto {
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
-    readonly name: string
-
+export class RegistrationDto {
+    @IsString({
+        message: ValidationMessage('email').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('email').isNotEmpty
+    })
     @IsEmail()
     @ApiProperty()
-    readonly email: string
+    email: string
 
-    @IsString()
-    @MinLength(8)
+    @IsString({
+        message: ValidationMessage('username').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('username').isNotEmpty
+    })
+    @IsEmail()
     @ApiProperty()
-    readonly password: string
+    username: string
 
-    @IsNumber()
+    @IsString({
+        message: ValidationMessage('Name').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('Name').isNotEmpty
+    })
     @ApiProperty()
-    readonly roleId: number
+    name: string
+
+    @IsString({
+        message: ValidationMessage('Password').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('Password').isNotEmpty
+    })
+    @MinLength(6)
+    @ApiProperty()
+    password: string
+
+    @IsString({
+        message: ValidationMessage('Confirm Password').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('Confirm Password').isNotEmpty
+    })
+    @MinLength(6)
+    @ApiProperty()
+    confirmPassword: string
+
+    @IsString({
+        message: ValidationMessage('user type').isString
+    })
+    @IsEnum(UserTypes, {
+        message: 'user type must be either "Supervisor" or "Student"'
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('user type').isNotEmpty
+    })
+    @ApiProperty({
+        description: 'List of user types',
+        isArray: true,
+        enum: UserTypes,
+        example: Object.keys(UserTypes)
+    })
+    userType: string
+
+    @IsString({
+        message: ValidationMessage('auth provider').isString
+    })
+    @IsOptional()
+    @ApiProperty()
+    authProvider: string
+
+    @IsString({
+        message: ValidationMessage('avatar url').isString
+    })
+    @IsOptional()
+    @ApiProperty()
+    avatarUrl: string
 }
 
-// Validate Request DTO
-export class ValidateRequestDto {
+export class EmailVerificationDto {
+    @IsString({
+        message: ValidationMessage('email').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('email').isNotEmpty
+    })
+    @IsEmail()
+    @ApiProperty()
+    email: string
+
+    @IsString({
+        message: ValidationMessage('code').isString
+    })
+    @IsNotEmpty({
+        message: ValidationMessage('code').isNotEmpty
+    })
+    @ApiProperty()
+    code: string
+}
+
+export class UpdatePasswordDto {
+    @IsOptional()
     @IsString()
     @ApiProperty()
-    readonly token: string
+    hash: string
+
+    @IsOptional()
+    @IsString()
+    @ApiProperty()
+    userUuid: string
+
+    @IsString()
+    @MinLength(6)
+    @ApiProperty()
+    newPassword: string
+
+    @IsString()
+    @MinLength(6)
+    @ApiProperty()
+    confirmPassword: string
+}
+
+export class ForgetPasswordDto {
+    @IsString()
+    @Length(6)
+    @ApiProperty()
+    code: string
+
+    @IsString()
+    @IsEmail()
+    @ApiProperty()
+    email: string
+}
+
+export class CodeSenderOnForgotPasswordDto {
+    @IsString()
+    @IsEmail()
+    @ApiProperty()
+    email: string
 }
