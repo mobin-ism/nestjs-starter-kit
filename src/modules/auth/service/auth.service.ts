@@ -9,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcryptjs'
 import * as crypto from 'crypto'
 import { LoggedInUser } from 'src/modules/users/data/logged-in-user.type'
-import { UserTypes } from 'src/modules/users/data/user-type.enum'
 import { Repository } from 'typeorm'
 import { EmailService } from '../../email/services/email.service'
 import { RoleService } from '../../role/services/role.service'
@@ -24,6 +23,7 @@ import {
 } from '../dto/auth.dto'
 import { LoginLog } from '../entities/login-log.entity'
 import { JwtService } from './jwt.service'
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -79,18 +79,7 @@ export class AuthService {
      * @return  {[type]}                            [return description]
      */
     async registration(req: any, registrationDto: RegistrationDto) {
-        let socialMediaLogin: boolean = false
-        if (
-            registrationDto.authProvider === 'google' ||
-            registrationDto.authProvider === 'linkedin'
-        ) {
-            socialMediaLogin = true
-        }
-
-        if (
-            socialMediaLogin === false &&
-            registrationDto.password != registrationDto.confirmPassword
-        ) {
+        if (registrationDto.password != registrationDto.confirmPassword) {
             throw new HttpException(
                 'Password Mismatched',
                 HttpStatus.BAD_REQUEST
@@ -102,10 +91,8 @@ export class AuthService {
             }
         })
 
-        if (!socialMediaLogin && previousData) {
+        if (previousData) {
             throw new HttpException('Email already exists', HttpStatus.CONFLICT)
-        } else if (socialMediaLogin && previousData) {
-            return await this.socialLogin(req, registrationDto.email)
         }
 
         try {
@@ -132,10 +119,6 @@ export class AuthService {
                 await this.userRepository.save(userToRegister)
             // GENERATE A VERIFICATION CODE AND SEND MAIL
             await this.generateEmailVerificationCode(registrationDto.email)
-
-            if (socialMediaLogin) {
-                return await this.socialLogin(req, registrationDto.email)
-            }
 
             return await this.unifiedAuthResponse(registeredUser)
         } catch (error) {
@@ -205,83 +188,6 @@ export class AuthService {
     }
 
     /**
-     * VERIFYING GOOGLE ACCESS TOKEN
-     *
-     * @param   {string}  code  [code description]
-     *
-     * FIRST I AM EXCHANGING THE CODE WITH ACCESS TOKEN THEN FINDING THE USER INFORMATION USING THAT ACCESS TOKEN
-     */
-    public async verifyGoogleLogin(req: any, accessToken: string) {
-        const response = await axios.get(
-            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`
-        )
-
-        const googleUserData = response.data
-
-        if (googleUserData && googleUserData.email) {
-            const userRegistrationDto = new RegistrationDto()
-            userRegistrationDto.firstName = googleUserData.given_name
-                ? googleUserData.given_name
-                : googleUserData.name
-                  ? googleUserData.name
-                  : ''
-            userRegistrationDto.lastName = googleUserData.family_name
-                ? googleUserData.family_name
-                : ''
-            userRegistrationDto.authProvider = 'google'
-            userRegistrationDto.email = googleUserData.email
-            userRegistrationDto.avatarUrl = googleUserData.picture
-            userRegistrationDto.userType = UserTypes.STUDENT
-
-            try {
-                return await this.registration(req, userRegistrationDto)
-            } catch (error) {
-                console.log('User already registered')
-            }
-        } else {
-            throw new HttpException('User not found', HttpStatus.BAD_REQUEST)
-        }
-    }
-
-    /**
-     * HANDLE SOCIAL LOGINS ONLY
-     *
-     * @param   {any}  req       [req description]
-     * @param   {[type]}email     [email description]
-     * @param   {[type]}password  [password description]
-     *
-     * @return  {[type]}         [return description]
-     */
-    public async socialLogin(req: any, email?: string, phone?: string) {
-        let user: User
-        if (email) {
-            user = await this.getAUser({ email })
-        } else {
-            user = await this.getAUser({ phone })
-        }
-
-        if (!user) {
-            throw new HttpException(
-                'Invalid User credentials',
-                HttpStatus.BAD_REQUEST
-            )
-        }
-
-        try {
-            // KEEPING LOG
-            this.logging(user, req)
-            return this.unifiedAuthResponse(user)
-        } catch (error) {
-            throw new HttpException(
-                'Some error occurred',
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
-        }
-
-        return await this.unifiedAuthResponse(user)
-    }
-
-    /**
      * THEN VERIFY THE CODE AND ENABLE THE USER FOR USE THIS APPLICATION
      *
      * @param   {ForgetPasswordDto}  forgetPasswordDto  [forgetPasswordDto description]
@@ -327,10 +233,8 @@ export class AuthService {
                 uuid: true,
                 email: true,
                 password: true,
-                firstName: true,
-                lastName: true,
-                userType: true,
-                authProvider: true,
+                name: true,
+                username: true,
                 avatarUrl: true,
                 isEmailVerified: true,
                 role: {

@@ -67,7 +67,7 @@ export class EmailService {
         Anchorbooks Support Team.`
 
         const msgData = {
-            recipent: userObj.firstName + ' ' + userObj.lastName,
+            recipent: userObj.name,
             title: `Password Reset Verification Code.`,
             message: message,
             redirectTo: `${process.env.APP_URL}`,
@@ -102,7 +102,7 @@ export class EmailService {
         Euclido - One Supercharged Platform.`
 
         const msgData = {
-            recipent: userObj.firstName + ' ' + userObj.lastName,
+            recipent: userObj.name,
             title: `Email Verification Code - Action Required.`,
             message: message,
             redirectTo: `${process.env.APP_URL}`,

@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer'
 import { IsEmail, IsString } from 'class-validator'
 import { CustomBaseEntity } from 'src/common/entity/custom-base.entity'
+import { NumberTransformer } from 'src/config/custom-transformer.config'
 import { LoginLog } from 'src/modules/auth/entities/login-log.entity'
 import { Role } from 'src/modules/role/entities/role.entity'
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
@@ -48,6 +49,19 @@ export class User extends CustomBaseEntity {
     @Column({ type: 'bool', nullable: false, default: false })
     isEmailVerified: boolean
 
+    @Column({ type: 'varchar', length: 10, nullable: true })
+    code: string
+
+    @Column({
+        type: 'numeric',
+        nullable: true,
+        transformer: new NumberTransformer()
+    })
+    codeExpiredAt: number
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    hash: string
+    
     /**
      * CONSTRUCTOR
      */
