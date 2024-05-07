@@ -49,6 +49,9 @@ export class User extends CustomBaseEntity {
     @Column({ type: 'bool', nullable: false, default: false })
     isEmailVerified: boolean
 
+    @Column({ type: 'bool', nullable: false, default: false })
+    isPhoneVerified: boolean
+
     @Column({ type: 'varchar', length: 10, nullable: true })
     code: string
 
@@ -61,7 +64,7 @@ export class User extends CustomBaseEntity {
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     hash: string
-    
+
     /**
      * CONSTRUCTOR
      */
@@ -69,14 +72,12 @@ export class User extends CustomBaseEntity {
         username: string,
         name: string,
         email: string,
-        password: string,
-        roleId: number
+        password: string
     ) {
         super()
         this.username = username
         this.name = name
         this.email = email
         this.password = password
-        this.roleId = roleId
     }
 }

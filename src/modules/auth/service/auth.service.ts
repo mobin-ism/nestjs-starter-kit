@@ -111,9 +111,10 @@ export class AuthService {
                 registrationDto.username,
                 registrationDto.name,
                 registrationDto.email,
-                hashedPassword,
-                associatedRole.id
+                hashedPassword
             )
+
+            userToRegister.role = associatedRole
 
             const registeredUser =
                 await this.userRepository.save(userToRegister)
