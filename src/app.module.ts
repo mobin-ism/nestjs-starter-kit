@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { dataSourceOptions } from 'src/config/typeorm.config'
+import { typeOrmAsyncConfig } from 'src/config/typeorm.config'
 import { UsersModule } from 'src/modules/users/users.module'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -36,7 +36,7 @@ import { RoleModule } from './modules/role/role.module'
             })
         }),
         MailerModule.forRootAsync(smtpConfig),
-        TypeOrmModule.forRoot(dataSourceOptions),
+        TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
         AuthModule,
         UsersModule,
         RoleModule,

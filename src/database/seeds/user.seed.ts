@@ -1,39 +1,38 @@
-// import { Role } from 'src/modules/role/entities/role.entity'
-// import { User } from 'src/modules/users/entities/user.entity'
-// import { DataSource } from 'typeorm'
-// import { Factory, Seeder } from 'typeorm-seeding'
-// export class UserSeed implements Seeder {
-//     public async run(factory: Factory, dataSource: DataSource) {
-//         const roleRepository = dataSource.getRepository(Role)
-//         const superadminRole = await roleRepository.findOne({
-//             where: {
-//                 slug: 'superadmin'
-//             }
-//         })
-//         if (superadminRole) {
-//             // Create a user with the roleId set to the superadmin role's ID
-//             const user = await factory(User)().make({
-//                 roleId: superadminRole.id
-//             })
-//             await factory(User)().create(user)
-//         }
-//     }
-// }
-
+import * as bcrypt from 'bcryptjs'
+import { Role } from 'src/modules/role/entities/role.entity'
 import { User } from 'src/modules/users/entities/user.entity'
 import { DataSource } from 'typeorm'
-import { Seeder, SeederFactoryManager } from 'typeorm-extension'
+import { Factory, Seeder } from 'typeorm-seeding'
 
-export default class UserSeeder implements Seeder {
-    public async run(
-        dataSource: DataSource,
-        factoryManager: SeederFactoryManager
-    ): Promise<void> {
-        const userFactory = factoryManager.get(User)
-        // save 1 factory generated entity, to the database
-        await userFactory.save()
+export class UserSeed implements Seeder {
+    public async run(factory: Factory, dataSource: DataSource) {
+        const userRepository = dataSource.getRepository(User)
+        const roleRepository = dataSource.getRepository(Role)
+        const superadminRole = await roleRepository.findOne({
+            where: {
+                slug: 'superadmin'
+            }
+        })
 
-        // save 5 factory generated entities, to the database
-        await userFactory.saveMany(5)
+        const salt = bcrypt.genSaltSync(10)
+        const hashedPassword = await bcrypt.hash('123456', salt)
+
+        if (superadminRole) {
+            // FIRST TRUNCATE THE USER TABLE
+            await userRepository.delete({})
+
+            // Create a user with the roleId set to the superadmin role's ID
+            const user = await factory(User)().make({
+                username: 'superadmin',
+                name: 'Super Admin',
+                email: 'superadmin@anchorblock.vc',
+                password: hashedPassword,
+                roleId: superadminRole.id,
+                isEmailVerified: true,
+                isPhoneVerified: true
+            })
+
+            await factory(User)().create(user)
+        }
     }
 }

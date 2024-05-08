@@ -7,7 +7,7 @@ import { Role } from 'src/modules/role/entities/role.entity'
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 @Entity()
 export class User extends CustomBaseEntity {
-    @Column({ type: 'varchar', length: 30, nullable: true })
+    @Column({ type: 'varchar', length: 30, unique: true, nullable: true })
     username: string
 
     @Column({ type: 'varchar', length: 30, nullable: true })
@@ -64,20 +64,4 @@ export class User extends CustomBaseEntity {
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     hash: string
-
-    /**
-     * CONSTRUCTOR
-     */
-    constructor(
-        username: string,
-        name: string,
-        email: string,
-        password: string
-    ) {
-        super()
-        this.username = username
-        this.name = name
-        this.email = email
-        this.password = password
-    }
 }

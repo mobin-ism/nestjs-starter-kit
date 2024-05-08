@@ -12,13 +12,6 @@ import { swaggerConfig } from './config/swagger.config'
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
 
-    // SWAGGER CONFIGURATION
-    SwaggerModule.setup(
-        'docs',
-        app,
-        SwaggerModule.createDocument(app, swaggerConfig)
-    )
-
     const configService = app.get(ConfigService)
     app.setGlobalPrefix('api')
     app.useGlobalPipes(new VP())
@@ -41,6 +34,14 @@ async function bootstrap() {
     }
 
     app.enableCors(options)
+
+    // SWAGGER CONFIGURATION
+    SwaggerModule.setup(
+        'docs',
+        app,
+        SwaggerModule.createDocument(app, swaggerConfig)
+    )
+
     await app.listen(configService.get<number>('APP_PORT', 3000))
 }
 bootstrap()

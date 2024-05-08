@@ -21,7 +21,6 @@
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config -n src/config/typeorm.config-migrations.ts",
         "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed -n src/config/typeorm.config-migrations.ts",
-        "seeder:run": "npm run build && ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run  -d src/config/typeorm.config.ts",
         "db:refresh": "npm run typeorm:cli schema:drop && npm run migration:run && npm run seed:run"
     },
     "dependencies": {
@@ -54,7 +53,6 @@
         "rxjs": "^7.8.1",
         "slugify": "^1.6.6",
         "typeorm": "^0.3.20",
-        "typeorm-extension": "^3.5.1",
         "typeorm-seeding": "^1.6.1"
     },
     "devDependencies": {

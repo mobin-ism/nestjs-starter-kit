@@ -49,7 +49,9 @@ export class RegistrationDto {
     @IsNotEmpty({
         message: ValidationMessage('username').isNotEmpty
     })
-    @IsEmail()
+    @IsString({
+        message: ValidationMessage('username').isString
+    })
     @ApiProperty()
     username: string
 

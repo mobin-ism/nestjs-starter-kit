@@ -5,13 +5,4 @@ import { Column, Entity } from 'typeorm'
 export class Question extends CustomBaseEntity {
     @Column({ type: 'text', nullable: false })
     title: string
-
-    /**
-     *
-     * @param title
-     */
-    constructor(title: string) {
-        super()
-        this.title = title
-    }
 }

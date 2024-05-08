@@ -107,13 +107,11 @@ export class AuthService {
                 await this.roleService.findDefaultUserRoleByUserType(
                     registrationDto.userType
                 )
-            userToRegister = new User(
-                registrationDto.username,
-                registrationDto.name,
-                registrationDto.email,
-                hashedPassword
-            )
-
+            userToRegister = new User()
+            userToRegister.username = registrationDto.username
+            userToRegister.name = registrationDto.name
+            userToRegister.email = registrationDto.email
+            userToRegister.password = hashedPassword
             userToRegister.role = associatedRole
 
             const registeredUser =
@@ -123,6 +121,7 @@ export class AuthService {
 
             return await this.unifiedAuthResponse(registeredUser)
         } catch (error) {
+            console.log(error)
             throw new HttpException(
                 'An error occurred while registering a user',
                 HttpStatus.BAD_REQUEST
