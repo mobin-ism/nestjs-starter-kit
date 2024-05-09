@@ -14,12 +14,12 @@ import { EmailService } from '../../email/services/email.service'
 import { RoleService } from '../../role/services/role.service'
 import { User } from '../../users/entities/user.entity'
 import {
-    CodeSenderOnForgotPasswordDto,
     EmailVerificationDto,
     ForgetPasswordDto,
     LoginDto,
     RegistrationDto,
-    UpdatePasswordDto
+    UpdatePasswordDto,
+    VerificationCodeSenderDto
 } from '../dto/auth.dto'
 import { LoginLog } from '../entities/login-log.entity'
 import { JwtService } from './jwt.service'
@@ -117,7 +117,9 @@ export class AuthService {
             const registeredUser =
                 await this.userRepository.save(userToRegister)
             // GENERATE A VERIFICATION CODE AND SEND MAIL
-            await this.generateEmailVerificationCode(registrationDto.email)
+            const verificationCodeSenderDto = new VerificationCodeSenderDto()
+            verificationCodeSenderDto.email = registrationDto.email
+            await this.generateEmailVerificationCode(verificationCodeSenderDto)
 
             return await this.unifiedAuthResponse(registeredUser)
         } catch (error) {
@@ -136,10 +138,12 @@ export class AuthService {
      *
      * @return  {[type]}         [return description]
      */
-    async generateEmailVerificationCode(email: string) {
+    async generateEmailVerificationCode(
+        verificationCodeSenderDto: VerificationCodeSenderDto
+    ) {
         const currentTimestamp = new Date().getTime()
         const user = await this.getAUser({
-            email: email
+            email: verificationCodeSenderDto.email
         })
 
         if (user && !user.isEmailVerified) {
@@ -303,12 +307,10 @@ export class AuthService {
      *
      * @return  {[type]}         [return description]
      */
-    async forgetPassword(
-        codeSenderOnForgotPasswordDto: CodeSenderOnForgotPasswordDto
-    ) {
+    async forgetPassword(verificationCodeSenderDto: VerificationCodeSenderDto) {
         const currentTimestamp = new Date().getTime()
         const user = await this.getAUser({
-            email: codeSenderOnForgotPasswordDto.email
+            email: verificationCodeSenderDto.email
         })
 
         if (user) {

@@ -96,17 +96,17 @@ export class EmailService {
      * SEND A CODE TO RECOVER FOR EMAIL VERIFICATION
      */
     async sendEmailVerificationCode(userObj: User, code: number) {
-        const message = `Thank you for signing up in Euclido! To ensure the security of your account, we request you to verify your email address by entering the verification code provided below:  ${code}. Enter this code within the next 2 minutes to verify your email. 
+        const message = `Thank you for signing up! To ensure the security of your account, we request you to verify your email address by entering the verification code provided below:  ${code}. Enter this code within the next 2 minutes to verify your email. 
 
         Best regards,
-        Euclido - One Supercharged Platform.`
+        One Supercharged Platform.`
 
         const msgData = {
             recipent: userObj.name,
             title: `Email Verification Code - Action Required.`,
             message: message,
             redirectTo: `${process.env.APP_URL}`,
-            btnTitle: 'Back To Euclido'
+            btnTitle: 'Back'
         }
 
         // EMAIL TEMPLATE
@@ -122,7 +122,7 @@ export class EmailService {
         return this.mailerService.sendMail({
             to: userObj.email,
             from: process.env.SMTP_MAIL_FROM,
-            subject: `Email Verification Code - Euclido`,
+            subject: `Email Verification Code`,
             html: compiled({ msgData })
         })
     }

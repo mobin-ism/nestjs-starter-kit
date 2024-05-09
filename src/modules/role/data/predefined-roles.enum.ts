@@ -1,7 +1,7 @@
 import { PermissionSet } from 'src/modules/permission/data/permissions.enum'
 
 /**
- * PREDEFINED ROLES FOR EUCLIDO
+ * PREDEFINED ROLES
  *
  */
 export enum PredefinedUserRoles {

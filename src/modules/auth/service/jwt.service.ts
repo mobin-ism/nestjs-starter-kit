@@ -24,10 +24,7 @@ export class JwtService {
     public async validateUser(decoded: any) {
         const user: User = await this.userRepository.findOne({
             where: { id: decoded.id },
-            relations: [
-                'userOrganizations.organization',
-                'userOrganizations.role'
-            ]
+            relations: ['role']
         })
 
         if (!user) {

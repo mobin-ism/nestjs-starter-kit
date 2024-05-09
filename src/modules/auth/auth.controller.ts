@@ -16,12 +16,12 @@ import {
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
 
 import {
-    CodeSenderOnForgotPasswordDto,
     EmailVerificationDto,
     ForgetPasswordDto,
     LoginDto,
     RegistrationDto,
-    UpdatePasswordDto
+    UpdatePasswordDto,
+    VerificationCodeSenderDto
 } from './dto/auth.dto'
 import { AuthService } from './service/auth.service'
 
@@ -140,11 +140,11 @@ export class AuthController {
     })
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
-    async regenerateAnotherCode(@Body() { email }: any) {
+    async regenerateAnotherCode(@Body() verificationCodeSenderDto: VerificationCodeSenderDto) {
         return {
             status: HttpStatus.OK,
             message: 'A new code has been sent to your inbox',
-            result: await this.authService.generateEmailVerificationCode(email)
+            result: await this.authService.generateEmailVerificationCode(verificationCodeSenderDto)
         }
     }
 
@@ -160,13 +160,13 @@ export class AuthController {
         status: HttpStatus.CREATED
     })
     private async forgetPassword(
-        @Body() codeSenderOnForgotPasswordDto: CodeSenderOnForgotPasswordDto
+        @Body() verificationCodeSenderDto: VerificationCodeSenderDto
     ) {
         return {
             status: HttpStatus.CREATED,
             message: 'Code sent',
             result: await this.authService.forgetPassword(
-                codeSenderOnForgotPasswordDto
+                verificationCodeSenderDto
             )
         }
     }

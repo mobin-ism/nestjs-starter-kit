@@ -171,7 +171,7 @@ export class ForgetPasswordDto {
     email: string
 }
 
-export class CodeSenderOnForgotPasswordDto {
+export class VerificationCodeSenderDto {
     @IsString()
     @IsEmail()
     @ApiProperty()
