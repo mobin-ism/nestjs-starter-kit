@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcryptjs'
 import { Role } from 'src/modules/role/entities/role.entity'
+import { UserTypes } from 'src/modules/users/data/user-type.enum'
 import { User } from 'src/modules/users/entities/user.entity'
 import { DataSource } from 'typeorm'
 import { Factory, Seeder } from 'typeorm-seeding'
@@ -29,7 +30,8 @@ export class UserSeed implements Seeder {
                 password: hashedPassword,
                 roleId: superadminRole.id,
                 isEmailVerified: true,
-                isPhoneVerified: true
+                isPhoneVerified: true,
+                userType: UserTypes.SUPERADMIN
             })
 
             await factory(User)().create(user)

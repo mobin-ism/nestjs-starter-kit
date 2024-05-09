@@ -6,7 +6,6 @@ import { PermissionSet } from 'src/modules/permission/data/permissions.enum'
  */
 export enum PredefinedUserRoles {
     SUPERADMIN = 'superadmin',
-    ADMIN = 'admin',
     USER = 'user'
 }
 

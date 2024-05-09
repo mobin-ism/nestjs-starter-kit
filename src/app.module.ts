@@ -11,7 +11,6 @@ import smtpConfig from './config/smtp.config'
 import { AuthModule } from './modules/auth/auth.module'
 import { EmailService } from './modules/email/services/email.service'
 import { PermissionModule } from './modules/permission/permission.module'
-import { QuestionsModule } from './modules/questions/questions.module'
 import { RoleModule } from './modules/role/role.module'
 @Module({
     imports: [
@@ -40,8 +39,7 @@ import { RoleModule } from './modules/role/role.module'
         AuthModule,
         UsersModule,
         RoleModule,
-        PermissionModule,
-        QuestionsModule
+        PermissionModule
     ],
     controllers: [AppController],
     providers: [AppService, EmailService],

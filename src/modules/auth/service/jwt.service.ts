@@ -34,10 +34,15 @@ export class JwtService {
 
         return {
             id: user.id,
+            uuid: user.uuid,
+            username: user.username,
             name: user.name,
             email: user.email,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
+            userType: user.userType,
+            authProvider: user.authProvider,
+            avatarUrl: user.avatarUrl,
+            isEmailVerified: user.isEmailVerified,
+            role: user.role
         }
     }
 

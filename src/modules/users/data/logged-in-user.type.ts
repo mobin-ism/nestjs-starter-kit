@@ -1,11 +1,12 @@
 export type LoggedInUser = {
     id: number
     uuid: string
-    firstName: string
-    lastName: string
+    username: string
+    name: string
     email: string
     userType: string
     isEmailVerified: boolean
+    isPhoneVerified: boolean
     role: {
         id: number
     }

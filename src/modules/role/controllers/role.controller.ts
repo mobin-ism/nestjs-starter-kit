@@ -21,14 +21,20 @@ import {
     ApiResponse,
     ApiTags
 } from '@nestjs/swagger'
+import { AllowedUserTypes } from 'src/common/decorators/allowed-user-types.decorator'
+import { RequiredVerifications } from 'src/common/decorators/verifications.decorator'
+import { AccessControlGuard } from 'src/common/guards/access-control.guard'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
+import { VerifiedUserGuard } from 'src/common/guards/verified-user.guard'
+import { RequiredVerificationsEnum } from 'src/modules/auth/data/required-verifications.enum'
+import { UserTypes } from 'src/modules/users/data/user-type.enum'
 import { CreateRoleDto } from '../dto/create-role.dto'
 import { UpdateRoleDto } from '../dto/update-role.dto'
 import { RoleService } from '../services/role.service'
 
 @ApiTags('🔒 Role API')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, VerifiedUserGuard, AccessControlGuard)
 @Controller('role')
 export class RoleController {
     constructor(private readonly roleService: RoleService) {}
@@ -45,6 +51,8 @@ export class RoleController {
         description: 'Role created',
         status: HttpStatus.CREATED
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async create(@Body() createRoleDto: CreateRoleDto, @Request() request) {
         return {
             statusCode: HttpStatus.CREATED,
@@ -65,6 +73,8 @@ export class RoleController {
         description: 'Created successfully',
         status: HttpStatus.CREATED
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async findAll(@Request() request) {
         return {
             statusCode: HttpStatus.OK,
@@ -85,6 +95,8 @@ export class RoleController {
         description: 'Data found',
         status: HttpStatus.OK
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async findAllPermissions() {
         return {
             statusCode: HttpStatus.OK,
@@ -105,6 +117,8 @@ export class RoleController {
         description: 'Data found',
         status: HttpStatus.OK
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async findOne(@Param('uuid') roleUuid: string, @Request() request) {
         return {
             statusCode: HttpStatus.OK,
@@ -131,6 +145,8 @@ export class RoleController {
         type: String,
         description: process.env.DEFAULT_PAGE_SIZE
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async paginate(
         @Request() request,
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
@@ -180,6 +196,8 @@ export class RoleController {
         description: 'Role updated',
         status: HttpStatus.OK
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async update(
         @Param('uuid') roleUuid: string,
         @Body() updateRoleDto: UpdateRoleDto,
@@ -208,6 +226,8 @@ export class RoleController {
         description: 'Role deleted',
         status: HttpStatus.OK
     })
+    @RequiredVerifications(RequiredVerificationsEnum.EMAIL)
+    @AllowedUserTypes(UserTypes.SUPERADMIN)
     async delete(@Param('uuid') roleUuid: string, @Request() request) {
         return {
             statusCode: HttpStatus.OK,

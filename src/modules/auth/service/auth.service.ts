@@ -123,7 +123,6 @@ export class AuthService {
 
             return await this.unifiedAuthResponse(registeredUser)
         } catch (error) {
-            console.log(error)
             throw new HttpException(
                 'An error occurred while registering a user',
                 HttpStatus.BAD_REQUEST
@@ -267,8 +266,8 @@ export class AuthService {
         return {
             id: user.id,
             uuid: user.uuid,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            username: user.username,
+            name: user.name,
             email: user.email,
             token: token,
             userType: user.userType,

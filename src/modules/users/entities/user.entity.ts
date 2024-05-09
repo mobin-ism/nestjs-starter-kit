@@ -5,6 +5,8 @@ import { NumberTransformer } from 'src/config/custom-transformer.config'
 import { LoginLog } from 'src/modules/auth/entities/login-log.entity'
 import { Role } from 'src/modules/role/entities/role.entity'
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { AuthProvider } from '../data/auth-provider.enum'
+import { UserTypes } from '../data/user-type.enum'
 @Entity()
 export class User extends CustomBaseEntity {
     @Column({ type: 'varchar', length: 30, unique: true, nullable: true })
@@ -64,4 +66,20 @@ export class User extends CustomBaseEntity {
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     hash: string
+
+    @Column({
+        type: 'enum',
+        enum: UserTypes,
+        nullable: false,
+        default: UserTypes.USER
+    })
+    userType: string
+
+    @Column({
+        type: 'enum',
+        enum: AuthProvider,
+        nullable: false,
+        default: AuthProvider.EMAIL
+    })
+    authProvider: string
 }
