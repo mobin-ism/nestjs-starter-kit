@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://i.ibb.co/9NVgz45/435-4356261-tupac-shakur-transparent-cartoons-2pac-emoji-hd-png-removebg-preview.png" width="200" alt="Nest Logo" /></a>
+  <img src="https://i.ibb.co/9NVgz45/435-4356261-tupac-shakur-transparent-cartoons-2pac-emoji-hd-png-removebg-preview.png" width="200" alt="Nest Logo" />
 </p>
 
 <p align="center">
