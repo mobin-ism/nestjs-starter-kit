@@ -26,7 +26,7 @@ export class UserSeed implements Seeder {
             const user = await factory(User)().make({
                 username: 'superadmin',
                 name: 'Super Admin',
-                email: 'superadmin@anchorblock.vc',
+                email: 'superadmin@example.com',
                 password: hashedPassword,
                 roleId: superadminRole.id,
                 isEmailVerified: true,
