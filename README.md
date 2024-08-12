@@ -1,10 +1,7 @@
 <p align="center">
-  <img src="https://i.ibb.co/9NVgz45/435-4356261-tupac-shakur-transparent-cartoons-2pac-emoji-hd-png-removebg-preview.png" width="200" alt="Nest Logo" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/NestJS.svg" width="200" alt="Nest Logo" />
 </p>
 
-<p align="center">
-  *** If you can't find something to live for, you best find something to die for ***
-</p>
 
 ## Update Packages
 
